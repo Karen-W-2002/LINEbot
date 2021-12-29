@@ -14,21 +14,59 @@ load_dotenv()
 
 
 machine = TocMachine(
-    states=["user", "state1", "state2"],
+    states=["user", "start", "searchrecipe", "searchnews", "searchchef",
+            "showbreakfast", "showlunch", "showdinner", "showchefrecipes",
+            "searchotherrecipe"],
     transitions=[
         {
             "trigger": "advance",
             "source": "user",
-            "dest": "state1",
-            "conditions": "is_going_to_state1",
+            "dest": "start",
+            "conditions": "is_going_to_start"
         },
         {
             "trigger": "advance",
-            "source": "user",
-            "dest": "state2",
-            "conditions": "is_going_to_state2",
+            "source": "start",
+            "dest": "searchrecipe",
+            "conditions": "is_going_to_searchrecipe"
         },
-        {"trigger": "go_back", "source": ["state1", "state2"], "dest": "user"},
+        {
+            "trigger": "advance",
+            "source": "start",
+            "dest": "searchnews",
+            "conditions": "is_going_to_searchnews"
+        },
+        {
+            "trigger": "advance",
+            "source": "start",
+            "dest": "searchchef",
+            "conditions": "is_going_to_searchchef"
+        },
+        {
+            "trigger": "advance",
+            "source": "searchrecipe",
+            "dest": "showbreakfast",
+            "conditions":"is_going_to_showbreakfast"
+        },
+        {
+            "trigger": "advance",
+            "source": "searchrecipe",
+            "dest": "showlunch",
+            "conditions":"is_going_to_showlunch"
+        },
+        {
+            "trigger": "advance",
+            "source": "searchrecipe",
+            "dest": "showdinner",
+            "conditions":"is_going_to_showdinner"
+        },
+        {
+            "trigger": "advance",
+            "source": "searchrecipe",
+            "dest": "showchefrecipes",
+            "conditions":"is_going_to_showchefrecipes"
+        },
+        {"trigger": "go_back", "source":   ["searchrecipe", "searchnews", "searchchef"], "dest": "start"},
     ],
     initial="user",
     auto_transitions=False,
@@ -36,7 +74,6 @@ machine = TocMachine(
 )
 
 app = Flask(__name__, static_url_path="")
-
 
 # get channel_secret and channel_access_token from your environment variable
 channel_secret = os.getenv("LINE_CHANNEL_SECRET", None)
@@ -71,10 +108,15 @@ def callback():
             continue
         if not isinstance(event.message, TextMessage):
             continue
+        if not isinstance(event.message.text, str):
+            continue
+        response = machine.advance(event)
 
-        line_bot_api.reply_message(
-            event.reply_token, TextSendMessage(text=event.message.text)
-        )
+        if response == False:                  
+            if event.message.text.lower() == 'home':
+                machine.go_back(event)
+            else:
+                send_text_message(event.reply_token, "Error, invalid command try again!")
 
     return "OK"
 
