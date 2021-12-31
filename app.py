@@ -16,6 +16,7 @@ load_dotenv()
 machine = TocMachine(
     states=["user", "start", "searchrecipe", "searchnews", "searchchef",
             "showbreakfast", "showlunch", "showdinner", "showchefrecipes",
+            "showmethod", "showingredient", "shownutrition",
             "searchotherrecipe"],
     transitions=[
         {
@@ -24,9 +25,9 @@ machine = TocMachine(
             "dest": "start",
             "conditions": "is_going_to_start"
         },
-        {
+       {
             "trigger": "advance",
-            "source": "start",
+            "source": ["start", "showbreakfast", "showlunch", "showdinner", "showchefrecipes", "showmethod", "showingredient", "shownutrition"],
             "dest": "searchrecipe",
             "conditions": "is_going_to_searchrecipe"
         },
@@ -38,7 +39,7 @@ machine = TocMachine(
         },
         {
             "trigger": "advance",
-            "source": "start",
+            "source": ["start", "showchefrecipes"],
             "dest": "searchchef",
             "conditions": "is_going_to_searchchef"
         },
@@ -62,9 +63,27 @@ machine = TocMachine(
         },
         {
             "trigger": "advance",
-            "source": "searchrecipe",
+            "source": ["searchchef", "searchrecipe"],
             "dest": "showchefrecipes",
-            "conditions":"is_going_to_showchefrecipes"
+            "conditions": "is_going_to_showchefrecipes"
+        },
+        {
+            "trigger": "advance",
+            "source": ["showbreakfast", "showlunch", "showdinner", "showchefrecipes", "showingredient", "shownutrition"],
+            "dest": "showmethod",
+            "conditions": "is_going_to_showmethod"
+        },
+        {
+            "trigger": "advance",
+            "source": ["showbreakfast", "showlunch", "showdinner", "showchefrecipes", "showmethod", "shownutrition"],
+            "dest": "showingredient",
+            "conditions": "is_going_to_showingredient"
+        },
+        {
+            "trigger": "advance",
+            "source": ["showbreakfast", "showlunch", "showdinner", "showchefrecipes", "showmethod", "showingredient"],
+            "dest": "shownutrition",
+            "conditions": "is_going_to_shownutrition"
         },
         {"trigger": "go_back", "source":   ["searchrecipe", "searchnews", "searchchef"], "dest": "start"},
     ],
@@ -87,6 +106,7 @@ if channel_access_token is None:
 
 line_bot_api = LineBotApi(channel_access_token)
 parser = WebhookParser(channel_secret)
+current_url = ""
 
 
 @app.route("/callback", methods=["POST"])
@@ -110,6 +130,7 @@ def callback():
             continue
         if not isinstance(event.message.text, str):
             continue
+
         response = machine.advance(event)
 
         if response == False:                  
