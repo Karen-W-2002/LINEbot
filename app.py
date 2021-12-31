@@ -14,10 +14,10 @@ load_dotenv()
 
 
 machine = TocMachine(
-    states=["user", "start", "searchrecipe", "searchnews", "searchchef",
+    states=["user", "start", "searchrecipe", "searchchef",
             "showbreakfast", "showlunch", "showdinner", "showchefrecipes",
             "showmethod", "showingredient", "shownutrition",
-            "searchotherrecipe"],
+            "searchotherrecipe", "showother"],
     transitions=[
         {
             "trigger": "advance",
@@ -27,15 +27,15 @@ machine = TocMachine(
         },
        {
             "trigger": "advance",
-            "source": ["start", "showbreakfast", "showlunch", "showdinner", "showchefrecipes", "showmethod", "showingredient", "shownutrition"],
+            "source": ["start", "showbreakfast", "showlunch", "showdinner", "showchefrecipes", "showmethod", "showingredient", "shownutrition", "showother"],
             "dest": "searchrecipe",
             "conditions": "is_going_to_searchrecipe"
         },
         {
             "trigger": "advance",
-            "source": "start",
-            "dest": "searchnews",
-            "conditions": "is_going_to_searchnews"
+            "source": ["start", "searchrecipe", "showother"],
+            "dest": "searchotherrecipe",
+            "conditions": "is_going_to_searchotherrecipe"
         },
         {
             "trigger": "advance",
@@ -69,23 +69,29 @@ machine = TocMachine(
         },
         {
             "trigger": "advance",
-            "source": ["showbreakfast", "showlunch", "showdinner", "showchefrecipes", "showingredient", "shownutrition"],
+            "source": ["showbreakfast", "showlunch", "showdinner", "showchefrecipes", "showingredient", "shownutrition", "showother"],
             "dest": "showmethod",
             "conditions": "is_going_to_showmethod"
         },
         {
             "trigger": "advance",
-            "source": ["showbreakfast", "showlunch", "showdinner", "showchefrecipes", "showmethod", "shownutrition"],
+            "source": ["showbreakfast", "showlunch", "showdinner", "showchefrecipes", "showmethod", "shownutrition", "showother"],
             "dest": "showingredient",
             "conditions": "is_going_to_showingredient"
         },
         {
             "trigger": "advance",
-            "source": ["showbreakfast", "showlunch", "showdinner", "showchefrecipes", "showmethod", "showingredient"],
+            "source": ["showbreakfast", "showlunch", "showdinner", "showchefrecipes", "showmethod", "showingredient", "showother"],
             "dest": "shownutrition",
             "conditions": "is_going_to_shownutrition"
         },
-        {"trigger": "go_back", "source":   ["searchrecipe", "searchnews", "searchchef"], "dest": "start"},
+        {
+            "trigger": "advance",
+            "source": "searchotherrecipe",
+            "dest": "showother",
+            "conditions": "is_going_to_showother"
+        },
+        {"trigger": "go_back", "source": ["searchrecipe", "searchotherrecipe", "searchchef", "showother"], "dest": "start"},
     ],
     initial="user",
     auto_transitions=False,

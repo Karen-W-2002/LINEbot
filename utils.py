@@ -94,13 +94,10 @@ def send_recipe_carousel(id):
     line_bot_api.push_message(id, message)
     return "OK"
 
-def send_news_carousel(id):
-    pass
-
 def send_chef_carousel(id):
     line_bot_api = LineBotApi(channel_access_token)
     message = TemplateSendMessage(
-        alt_text = "Carousel template of Chefs",
+        alt_text = "Carousel template",
         template = CarouselTemplate(
             columns=[
                 CarouselColumn(
@@ -108,14 +105,6 @@ def send_chef_carousel(id):
                     title = "Chef #1",
                     text = "Gordon Ramsay",
                     actions=[
-                        MessageTemplateAction(
-                            label='Personal Bio',
-                            text='personal bio'
-                        ),
-                        MessageTemplateAction(
-                            label='View Recipes',
-                            text='show chef recipes'
-                        ),
                         URIAction(
                             label='Website',
                             uri='https://www.gordonramsay.com/'
@@ -127,14 +116,6 @@ def send_chef_carousel(id):
                     title = "Chef #2",
                     text = "Tom Kerridge",
                     actions=[
-                        MessageTemplateAction(
-                            label='Personal Bio',
-                            text='personal bio'
-                        ),
-                        MessageTemplateAction(
-                            label='View Recipes',
-                            text='show chef recipes'
-                        ),
                         URIAction(
                             label='Website',
                             uri='https://tomkerridge.com/'
@@ -146,17 +127,31 @@ def send_chef_carousel(id):
                     title = "Chef #3",
                     text = "Orlando Murrin",
                     actions=[
-                        MessageTemplateAction(
-                            label='Personal Bio',
-                            text='personal bio'
-                        ),
-                        MessageTemplateAction(
-                            label='View Recipes',
-                            text='show chef recipes'
-                        ),
                         URIAction(
                             label='Website',
                             uri='https://orlandomurrin.com/'
+                        )
+                    ]
+                ),
+                CarouselColumn(
+                    thumbnail_image_url = "https://ychef.files.bbci.co.uk/1600x900/p04tx3m6.webp",
+                    title = "Navigation Menu",
+                    text = "Navigate to the chef's recipes",
+                    actions=[
+                        MessageTemplateAction(
+                            label='View Recipes',
+                            text='show chef recipes'
+                        )
+                    ]
+                ),
+                CarouselColumn(
+                    thumbnail_image_url = "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-1240w,f_auto,q_auto:best/newscms/2017_05/1890591/170203-salt-bae-mn-1530.jpg",
+                    title = "Navigation Menu",
+                    text = "Navigate to the main menu",
+                    actions=[
+                        MessageTemplateAction(
+                            label='Back to Main Menu',
+                            text='home'
                         )
                     ]
                 )
@@ -485,6 +480,63 @@ def send_cr_carousel(id):
     line_bot_api.push_message(id, message)
     return "OK"
 
+def send_showrecipe_carousel(id, imgs, titles, titletexts, labels, texts):
+    line_bot_api = LineBotApi(channel_access_token)
+
+    cols = []
+    for i, imgurl in enumerate(imgs):
+        cols.append(
+            CarouselColumn(
+                thumbnail_image_url=imgurl,
+                title=titles[i],
+                text=titletexts[i],
+                actions=[
+                    MessageTemplateAction(
+                        label=labels[0],
+                        text=texts[0]
+                    ),
+                    MessageTemplateAction(
+                        label=labels[1],
+                        text=texts[1]
+                    ),
+                    MessageTemplateAction(
+                        label=labels[2],
+                        text=texts[2]
+                    )
+                ]
+            )
+        )
+
+    cols.append(
+        CarouselColumn(
+            thumbnail_image_url="https://media-cldnry.s-nbcnews.com/image/upload/t_fit-1240w,f_auto,q_auto:best/newscms/2017_05/1890591/170203-salt-bae-mn-1530.jpg",
+            title="Navigation Menu",
+            text="Navigate to ... ",
+            actions=[
+                MessageTemplateAction(
+                    label='Search others',
+                    text='search other recipes'
+                ),
+                MessageTemplateAction(
+                    label='Back to Recipes',
+                    text='search recipes'
+                ),
+                MessageTemplateAction(
+                    label='Back to Main Menu',
+                    text='home'
+                )
+            ]
+        )
+    )
+
+    message = TemplateSendMessage(
+        alt_text='Carousel template',
+        template=CarouselTemplate(columns=cols)
+    )
+
+    line_bot_api.push_message(id, message)
+    return "OK"
+
 def send_msg_carousel(id, imgs, titles, titletexts, labels, texts):
     line_bot_api = LineBotApi(channel_access_token)
 
@@ -541,6 +593,41 @@ def send_uri_carousel(id, imgs, titles, titletexts, labels, uris):
 
 # WEB SCRAPER FUNCTIONS
 
+def find_urls(URL):
+    page = requests.get(URL)
+    soup = BeautifulSoup(page.content, "html.parser")
+    a = []
+
+    for results in soup.find_all(class_="standard-card-new__article-title", href = True):
+        a.append("https://www.bbcgoodfood.com/" + results['href'])
+
+    return a
+
+def get_img_url(URL):
+    page = requests.get(URL)
+    soup = BeautifulSoup(page.content, "html.parser")
+    a = ""
+    
+    for result in soup.find("div", class_="post-header__image-container"):
+        img = result.find_all(class_="image__img")
+        for i in img:
+            a = i.get('src')
+
+    return a
+
+def get_recipe_name(URL):
+    page = requests.get(URL)
+    soup = BeautifulSoup(page.content, "html.parser")
+    results = soup.find(id="__next")
+    job_elements = results.find_all("h1", class_="heading-1")
+
+    a = ""
+
+    for job_element in job_elements:
+        a += job_element.text.strip()
+
+    return a
+
 def find_method(URL):
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, "html.parser")
@@ -550,7 +637,7 @@ def find_method(URL):
     a = ""
 
     for job_element in job_elements:
-        new_elements = job_element.find_all("div",class_="editor-content")
+        new_elements = job_element.find_all("div", class_="editor-content")
         for new_element in new_elements:
             a+= "⭐️" + new_element.text.strip() + "\n"
 
