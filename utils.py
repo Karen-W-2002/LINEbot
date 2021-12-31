@@ -162,273 +162,6 @@ def send_chef_carousel(id):
     line_bot_api.push_message(id, message)
     return "OK"
 
-def send_bf_carousel(id):
-    line_bot_api = LineBotApi(channel_access_token)
-    message = TemplateSendMessage(
-        alt_text = "Carousel template of Breakfast Menu",
-        template = CarouselTemplate(
-            columns=[
-                CarouselColumn(
-                    thumbnail_image_url = "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/american-style-pancakes-87119e3.jpg?quality=90&webp=true&resize=440,400",
-                    title = "Breakfast #1",
-                    text = "American pancakes",
-                    actions=[
-                        MessageTemplateAction(
-                            label='Cooking Method',
-                            text='show method'
-                        ),
-                        MessageTemplateAction(
-                            label='Ingredients',
-                            text='show ingredients'
-                        ),
-                        MessageTemplateAction(
-                            label='Nutrition',
-                            text='show nutrition'
-                        )
-                    ]
-                ),
-                CarouselColumn(
-                    thumbnail_image_url = "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/eggsoldiers-f0e097c.jpg?quality=90&webp=true&resize=440,400",
-                    title = "Breakfast #2",
-                    text = "Soft-boiled eggs",
-                    actions=[
-                        MessageTemplateAction(
-                            label='Cooking Method',
-                            text='show method'
-                        ),
-                        MessageTemplateAction(
-                            label='Ingredients',
-                            text='show ingredients'
-                        ),
-                        MessageTemplateAction(
-                            label='Nutrition',
-                            text='show nutrition'
-                        )
-                    ]
-                ),
-                CarouselColumn(
-                    thumbnail_image_url = "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/overnight-oats-32a2747.jpg?quality=90&webp=true&resize=440,400",
-                    title = "Breakfast #3",
-                    text = "Overnight oats",
-                    actions=[
-                        MessageTemplateAction(
-                            label='Cooking Method',
-                            text='show method'
-                        ),
-                        MessageTemplateAction(
-                            label='Ingredients',
-                            text='show ingredients'
-                        ),
-                        MessageTemplateAction(
-                            label='Nutrition',
-                            text='show nutrition'
-                        )
-                    ]
-                ),
-                CarouselColumn(
-                    thumbnail_image_url = "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/overnight-oats-32a2747.jpg?quality=90&webp=true&resize=440,400",
-                    title = "Breakfast #3",
-                    text = "Overnight oats",
-                    actions=[
-                        MessageTemplateAction(
-                            label='Search others',
-                            text='todo'
-                        ),
-                        MessageTemplateAction(
-                            label='Back to Recipes',
-                            text='search recipes'
-                        ),
-                        MessageTemplateAction(
-                            label='Back to Main Menu',
-                            text='change...'
-                        )
-                    ]
-                )
-            ]
-        )
-    )
-
-    line_bot_api.push_message(id, message)
-    return "OK"
-
-def send_lunch_carousel(id):
-    line_bot_api = LineBotApi(channel_access_token)
-    message = TemplateSendMessage(
-        alt_text = "Carousel template of Lunch Menu",
-        template = CarouselTemplate(
-            columns=[
-                CarouselColumn(
-                    thumbnail_image_url = "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1035613_10-0e544b7.jpg?quality=90&webp=true&resize=500,454",
-                    title = "Lunch #1",
-                    text = "Chicken noodle soup",
-                    actions=[
-                        MessageTemplateAction(
-                            label='Cooking Method',
-                            text='show method'
-                        ),
-                        MessageTemplateAction(
-                            label='Ingredients',
-                            text='show ingredients'
-                        ),
-                        MessageTemplateAction(
-                            label='Nutrition',
-                            text='show nutrition'
-                        )
-                    ]
-                ),
-                CarouselColumn(
-                    thumbnail_image_url = "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/lentil_soup-c6fa61c.jpg?quality=90&webp=true&resize=440,400",
-                    title = "Lunch #2",
-                    text = "Lentil soup",
-                    actions=[
-                        MessageTemplateAction(
-                            label='Cooking Method',
-                            text='show method'
-                        ),
-                        MessageTemplateAction(
-                            label='Ingredients',
-                            text='show ingredients'
-                        ),
-                        MessageTemplateAction(
-                            label='Nutrition',
-                            text='show nutrition'
-                        )
-                    ]
-                ),
-                CarouselColumn(
-                    thumbnail_image_url = "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/seafood_pasta-f15956d.jpg?quality=90&webp=true&resize=500,454",
-                    title = "Lunch #3",
-                    text = "20-minute seafood pasta",
-                    actions=[
-                        MessageTemplateAction(
-                            label='Cooking Method',
-                            text='show method'
-                        ),
-                        MessageTemplateAction(
-                            label='Ingredients',
-                            text='show ingredients'
-                        ),
-                        MessageTemplateAction(
-                            label='Nutrition',
-                            text='show nutrition'
-                        )
-                    ]
-                ),
-                CarouselColumn(
-                    thumbnail_image_url = "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/overnight-oats-32a2747.jpg?quality=90&webp=true&resize=440,400",
-                    title = "Lunch #3",
-                    text = "Overnight oats",
-                    actions=[
-                        MessageTemplateAction(
-                            label='Search others',
-                            text='todo'
-                        ),
-                        MessageTemplateAction(
-                            label='Back to Recipes',
-                            text='search recipes'
-                        ),
-                        MessageTemplateAction(
-                            label='Back to Main Menu',
-                            text='change...'
-                        )
-                    ]
-                )
-            ]
-        )
-    )
-
-    line_bot_api.push_message(id, message)
-    return "OK"
-
-def send_dinner_carousel(id):
-    line_bot_api = LineBotApi(channel_access_token)
-    message = TemplateSendMessage(
-        alt_text = "Carousel template of Dinner Menu",
-        template = CarouselTemplate(
-            columns=[
-                CarouselColumn(
-                    thumbnail_image_url = "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/sausage-ragu-a4e1460.jpg?quality=90&webp=true&resize=440,400",
-                    title = "Dinner #1",
-                    text = "Sausage ragu",
-                    actions=[
-                        MessageTemplateAction(
-                            label='Cooking Method',
-                            text='show method'
-                        ),
-                        MessageTemplateAction(
-                            label='Ingredients',
-                            text='show ingredients'
-                        ),
-                        MessageTemplateAction(
-                            label='Nutrition',
-                            text='show nutrition'
-                        )
-                    ]
-                ),
-                CarouselColumn(
-                    thumbnail_image_url = "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/beef-curry-711a4c1.jpg?quality=90&webp=true&resize=440,400",
-                    title = "Dinner #2",
-                    text = "Beef curry",
-                    actions=[
-                        MessageTemplateAction(
-                            label='Cooking Method',
-                            text='show method'
-                        ),
-                        MessageTemplateAction(
-                            label='Ingredients',
-                            text='show ingredients'
-                        ),
-                        MessageTemplateAction(
-                            label='Nutrition',
-                            text='show nutrition'
-                        )
-                    ]
-                ),
-                CarouselColumn(
-                    thumbnail_image_url = "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/salmon-leek-parcel-6dd60f6.jpg?quality=90&webp=true&resize=400,363",
-                    title = "Dinner #3",
-                    text = "Salmon & leek parcel",
-                    actions=[
-                        MessageTemplateAction(
-                            label='Cooking Method',
-                            text='show method'
-                        ),
-                        MessageTemplateAction(
-                            label='Ingredients',
-                            text='show ingredients'
-                        ),
-                        MessageTemplateAction(
-                            label='Nutrition',
-                            text='show nutrition'
-                        )
-                    ]
-                ),
-                CarouselColumn(
-                    thumbnail_image_url = "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/salmon-leek-parcel-6dd60f6.jpg?quality=90&webp=true&resize=400,363",
-                    title = "Lunch #3",
-                    text = "Overnight oats",
-                    actions=[
-                        MessageTemplateAction(
-                            label='Search others',
-                            text='todo'
-                        ),
-                        MessageTemplateAction(
-                            label='Back to Recipes',
-                            text='search recipes'
-                        ),
-                        MessageTemplateAction(
-                            label='Back to Main Menu',
-                            text='change...'
-                        )
-                    ]
-                )
-            ]
-        )
-    )
-
-    line_bot_api.push_message(id, message)
-    return "OK"
-
 def send_cr_carousel(id):
     line_bot_api = LineBotApi(channel_access_token)
     message = TemplateSendMessage(
@@ -455,13 +188,51 @@ def send_cr_carousel(id):
                     ]
                 ),
                 CarouselColumn(
-                    thumbnail_image_url = "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/salmon-leek-parcel-6dd60f6.jpg?quality=90&webp=true&resize=400,363",
-                    title = "Lunch #3",
-                    text = "Overnight oats",
+                    thumbnail_image_url = "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/lamb-biryani-83e5c3d.jpg?quality=90&webp=true&resize=440,400",
+                    title = "Tom Kerridge",
+                    text = "Lamb biryani",
                     actions=[
                         MessageTemplateAction(
-                            label='Search chefs',
-                            text='search chefs'
+                            label='Cooking Method',
+                            text='show method'
+                        ),
+                        MessageTemplateAction(
+                            label='Ingredients',
+                            text='show ingredients'
+                        ),
+                        MessageTemplateAction(
+                            label='Nutrition',
+                            text='show nutrition'
+                        )
+                    ]
+                ),
+                CarouselColumn(
+                    thumbnail_image_url = "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1001464_11-ed687dd.jpg?quality=90&webp=true&resize=440,400",
+                    title = "Orlando Murrin",
+                    text = "Best ever chocolate brownies recipe",
+                    actions=[
+                        MessageTemplateAction(
+                            label='Cooking Method',
+                            text='show method'
+                        ),
+                        MessageTemplateAction(
+                            label='Ingredients',
+                            text='show ingredients'
+                        ),
+                        MessageTemplateAction(
+                            label='Nutrition',
+                            text='show nutrition'
+                        )
+                    ]
+                ),
+                CarouselColumn(
+                    thumbnail_image_url="https://media-cldnry.s-nbcnews.com/image/upload/t_fit-1240w,f_auto,q_auto:best/newscms/2017_05/1890591/170203-salt-bae-mn-1530.jpg",
+                    title="Navigation Menu",
+                    text="Navigate to ... ",
+                    actions=[
+                        MessageTemplateAction(
+                            label='Search others',
+                            text='search other recipes'
                         ),
                         MessageTemplateAction(
                             label='Back to Recipes',
@@ -469,7 +240,7 @@ def send_cr_carousel(id):
                         ),
                         MessageTemplateAction(
                             label='Back to Main Menu',
-                            text='change...'
+                            text='home'
                         )
                     ]
                 )

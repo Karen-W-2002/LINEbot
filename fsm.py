@@ -1,7 +1,7 @@
 from transitions.extensions import GraphMachine
 from linebot.models import MessageTemplateAction
 
-from utils import find_ingredient, find_method, find_nutrition, find_urls, get_img_url, get_recipe_name, send_chef_carousel, send_cr_carousel, send_dinner_carousel, send_lunch_carousel, send_msg_carousel, send_showrecipe_carousel, send_text_message, send_button_message, send_recipe_carousel, send_bf_carousel, send_uri_carousel
+from utils import find_ingredient, find_method, find_nutrition, find_urls, get_img_url, get_recipe_name, send_chef_carousel, send_cr_carousel, send_msg_carousel, send_showrecipe_carousel, send_text_message, send_button_message, send_recipe_carousel, send_uri_carousel
 
 class TocMachine(GraphMachine):
     def __init__(self, **machine_configs):
@@ -90,15 +90,57 @@ class TocMachine(GraphMachine):
 
     def on_enter_showbreakfast(self, event):
         id = event.source.user_id
-        send_bf_carousel(id)
+
+        imgs = ["https://images.immediate.co.uk/production/volatile/sites/30/2020/08/vegan-banana-bread-ce14fcd.jpg?quality=90&webp=true&resize=440,400",
+        "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/banana-muffins-943f3dc.jpg?quality=90&webp=true&resize=440,400",
+        "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/pancakes-for-one-597b7c1.jpg?quality=90&webp=true&resize=440,400",
+        "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/tofu_scramble-eaa0c64.jpg?quality=90&webp=true&resize=440,400"
+        ]
+        titles = []
+        titletexts = ["Vegan banana bread", "Easy banana muffins", "Pancakes for one", "Tofu scramble"]
+        labels = ["Cooking Method", "Ingredients", "Nutrition"]
+        texts = ["show method", "show ingredients", "show nutrition"]
+
+        for i in range(4):
+            titles.append("Breakfast #" + str(i+1))
+
+        send_showrecipe_carousel(id, imgs, titles, titletexts, labels, texts)
 
     def on_enter_showlunch(self, event):
         id = event.source.user_id
-        send_lunch_carousel(id)
+        
+        imgs = ["https://images.immediate.co.uk/production/volatile/sites/30/2020/08/roasted-sweet-potato-carrot-soup-1223acc.jpg?quality=90&webp=true&resize=440,400",
+        "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/marghuerita-6e61fd5.jpg?quality=90&webp=true&resize=440,400",
+        "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/cheats-chicken-ramen-d07e7ea.jpg?quality=90&webp=true&resize=440,400",
+        "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/lentil-kofta-with-orzo-feta-5581f16-scaled.jpg?quality=90&webp=true&resize=600,545"
+        ]
+        titles = []
+        titletexts = ["Roasted sweet potato & carrot soup", "Next level Margherita pizza", "Cheat's chicken ramen", "Lentil kofta with orzo & feta"]
+        labels = ["Cooking Method", "Ingredients", "Nutrition"]
+        texts = ["show method", "show ingredients", "show nutrition"]
+
+        for i in range(4):
+            titles.append("Lunch #" + str(i+1))
+
+        send_showrecipe_carousel(id, imgs, titles, titletexts, labels, texts)
 
     def on_enter_showdinner(self, event):
         id = event.source.user_id
-        send_dinner_carousel(id)
+
+        imgs = ["https://images.immediate.co.uk/production/volatile/sites/30/2020/08/gnocchi-1d16725.jpg?quality=90&webp=true&resize=440,400",
+        "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-52074_11-ca58d45.jpg?quality=90&webp=true&resize=440,400",
+        "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/salmon-leek-parcel-6dd60f6.jpg?quality=90&webp=true&resize=400,363",
+        "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/sausage-ragu-a4e1460.jpg?quality=90&webp=true&resize=440,400"
+        ]
+        titles = []
+        titletexts = ["Chorizo & mozzarella gnocchi bake", "Mushroom risotto", "Salmon & leek parcel", "Sausage ragu"]
+        labels = ["Cooking Method", "Ingredients", "Nutrition"]
+        texts = ["show method", "show ingredients", "show nutrition"]
+
+        for i in range(4):
+            titles.append("Dinner #" + str(i+1))
+
+        send_showrecipe_carousel(id, imgs, titles, titletexts, labels, texts)
 
     def on_enter_showchefrecipes(self, event):
         id = event.source.user_id
