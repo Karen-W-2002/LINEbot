@@ -1,4 +1,5 @@
 import os
+from linebot.models.events import Postback
 import requests
 import re
 
@@ -6,7 +7,7 @@ from bs4 import BeautifulSoup
 
 from linebot import LineBotApi, WebhookParser
 from linebot.models import MessageEvent, TextMessage, TextSendMessage, TemplateSendMessage, ButtonsTemplate, MessageTemplateAction
-from linebot.models.actions import URIAction
+from linebot.models.actions import PostbackAction, URIAction
 from linebot.models.template import CarouselColumn, CarouselTemplate
 
 
@@ -173,17 +174,20 @@ def send_cr_carousel(id):
                     title = "Gordon Ramsay",
                     text = "Beef wellington",
                     actions=[
-                        MessageTemplateAction(
+                        PostbackAction(
                             label='Cooking Method',
-                            text='show method'
+                            display_text='show method',
+                            data="https://www.bbcgoodfood.com/recipes/beef-wellington" + "&show method"
                         ),
-                        MessageTemplateAction(
+                        PostbackAction(
                             label='Ingredients',
-                            text='show ingredients'
+                            display_text='show ingredients',
+                            data="https://www.bbcgoodfood.com/recipes/beef-wellington" + "&show ingredients"
                         ),
-                        MessageTemplateAction(
+                        PostbackAction(
                             label='Nutrition',
-                            text='show nutrition'
+                            display_text='show nutrition',
+                            data="https://www.bbcgoodfood.com/recipes/beef-wellington" + "&show nutrition"
                         )
                     ]
                 ),
@@ -192,17 +196,20 @@ def send_cr_carousel(id):
                     title = "Tom Kerridge",
                     text = "Lamb biryani",
                     actions=[
-                        MessageTemplateAction(
+                        PostbackAction(
                             label='Cooking Method',
-                            text='show method'
+                            display_text='show method',
+                            data="https://www.bbcgoodfood.com/recipes/lamb-biryani" + "&show method"
                         ),
-                        MessageTemplateAction(
+                        PostbackAction(
                             label='Ingredients',
-                            text='show ingredients'
+                            display_text='show ingredients',
+                            data="https://www.bbcgoodfood.com/recipes/lamb-biryani" + "&show ingredients"
                         ),
-                        MessageTemplateAction(
+                        PostbackAction(
                             label='Nutrition',
-                            text='show nutrition'
+                            display_text='show nutrition',
+                            data="https://www.bbcgoodfood.com/recipes/lamb-biryani" + "&show nutrition"
                         )
                     ]
                 ),
@@ -211,17 +218,20 @@ def send_cr_carousel(id):
                     title = "Orlando Murrin",
                     text = "Best ever chocolate brownies recipe",
                     actions=[
-                        MessageTemplateAction(
+                        PostbackAction(
                             label='Cooking Method',
-                            text='show method'
+                            display_text='show method',
+                            data="https://www.bbcgoodfood.com/recipes/best-ever-chocolate-brownies-recipe" + "&show method"
                         ),
-                        MessageTemplateAction(
+                        PostbackAction(
                             label='Ingredients',
-                            text='show ingredients'
+                            display_text='show ingredients',
+                            data="https://www.bbcgoodfood.com/recipes/best-ever-chocolate-brownies-recipe" + "&show ingredients"
                         ),
-                        MessageTemplateAction(
+                        PostbackAction(
                             label='Nutrition',
-                            text='show nutrition'
+                            display_text='show nutrition',
+                            data="https://www.bbcgoodfood.com/recipes/best-ever-chocolate-brownies-recipe" + "&show nutrition"
                         )
                     ]
                 ),
@@ -251,7 +261,7 @@ def send_cr_carousel(id):
     line_bot_api.push_message(id, message)
     return "OK"
 
-def send_showrecipe_carousel(id, imgs, titles, titletexts, labels, texts):
+def send_showrecipe_carousel(id, imgs, titles, titletexts, labels, texts, datalist):
     line_bot_api = LineBotApi(channel_access_token)
 
     cols = []
@@ -262,17 +272,20 @@ def send_showrecipe_carousel(id, imgs, titles, titletexts, labels, texts):
                 title=titles[i],
                 text=titletexts[i],
                 actions=[
-                    MessageTemplateAction(
+                    PostbackAction(
                         label=labels[0],
-                        text=texts[0]
+                        display_text=texts[0],
+                        data=datalist[i]+"&show method"
                     ),
-                    MessageTemplateAction(
+                    PostbackAction(
                         label=labels[1],
-                        text=texts[1]
+                        display_text=texts[1],
+                        data=datalist[i]+"&show ingredients"
                     ),
-                    MessageTemplateAction(
+                    PostbackAction(
                         label=labels[2],
-                        text=texts[2]
+                        display_text=texts[2],
+                        data=datalist[i]+"&show nutrition"
                     )
                 ]
             )

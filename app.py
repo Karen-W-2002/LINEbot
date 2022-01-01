@@ -7,6 +7,7 @@ from linebot import LineBotApi, WebhookParser
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 from linebot.models.events import PostbackEvent
+from linebot.webhook import WebhookHandler
 
 from fsm import TocMachine
 from utils import send_text_message
@@ -114,8 +115,6 @@ if channel_access_token is None:
 
 line_bot_api = LineBotApi(channel_access_token)
 parser = WebhookParser(channel_secret)
-#current_url = ""
-
 
 @app.route("/callback", methods=["POST"])
 def callback():
@@ -132,23 +131,18 @@ def callback():
 
     # if event is MessageEvent and message is TextMessage, then echo text
     for event in events:
-        if not isinstance(event, MessageEvent):
-            continue
-        if not isinstance(event.message, TextMessage):
-            continue
-        if not isinstance(event.message.text, str):
-            continue
+        if isinstance(event, PostbackEvent):
+            response = machine.advance(event)
+        else:
+            response = machine.advance(event)
 
-        response = machine.advance(event)
-
-        if response == False:                  
-            if event.message.text.lower() == 'home':
-                machine.go_back(event)
-            else:
-                send_text_message(event.reply_token, "Error, invalid command try again!")
+            if response == False:                  
+                if event.message.text.lower() == 'home':
+                    machine.go_back(event)
+                else:
+                    send_text_message(event.reply_token, "Error, invalid command try again!")
 
     return "OK"
-
 
 @app.route("/webhook", methods=["POST"])
 def webhook_handler():
