@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from linebot import LineBotApi, WebhookParser
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
+from linebot.models.events import PostbackEvent
 
 from fsm import TocMachine
 from utils import send_text_message
@@ -33,7 +34,7 @@ machine = TocMachine(
         },
         {
             "trigger": "advance",
-            "source": ["start", "searchrecipe", "showother"],
+            "source": ["start", "searchrecipe", "showother", "showbreakfast", "showlunch", "showdinner", "showchefrecipes"],
             "dest": "searchotherrecipe",
             "conditions": "is_going_to_searchotherrecipe"
         },
@@ -91,7 +92,8 @@ machine = TocMachine(
             "dest": "showother",
             "conditions": "is_going_to_showother"
         },
-        {"trigger": "go_back", "source": ["searchrecipe", "searchotherrecipe", "searchchef", "showother"], "dest": "start"},
+        {"trigger": "go_back", "source": ["searchrecipe", "searchotherrecipe", "searchchef", "showother", 
+        "showbreakfast", "showlunch", "showdinner", "showchefrecipes"], "dest": "start"},
     ],
     initial="user",
     auto_transitions=False,
@@ -112,7 +114,7 @@ if channel_access_token is None:
 
 line_bot_api = LineBotApi(channel_access_token)
 parser = WebhookParser(channel_secret)
-current_url = ""
+#current_url = ""
 
 
 @app.route("/callback", methods=["POST"])

@@ -6,8 +6,8 @@ from bs4 import BeautifulSoup
 
 from linebot import LineBotApi, WebhookParser
 from linebot.models import MessageEvent, TextMessage, TextSendMessage, TemplateSendMessage, ButtonsTemplate, MessageTemplateAction
-from linebot.models.actions import PostbackAction, URIAction
-from linebot.models.template import CarouselColumn, CarouselTemplate, ImageCarouselColumn, ImageCarouselTemplate
+from linebot.models.actions import URIAction
+from linebot.models.template import CarouselColumn, CarouselTemplate
 
 
 channel_access_token = os.getenv("LINE_CHANNEL_ACCESS_TOKEN", None)
@@ -78,7 +78,7 @@ def send_recipe_carousel(id):
                     text = "Which recipe category would you like to view?",
                     actions=[
                         MessageTemplateAction(
-                            label='Search others',
+                            label='Search other Recipes',
                             text='search other recipes'
                         ),
                         MessageTemplateAction(
@@ -231,7 +231,7 @@ def send_cr_carousel(id):
                     text="Navigate to ... ",
                     actions=[
                         MessageTemplateAction(
-                            label='Search others',
+                            label='Search other Recipes',
                             text='search other recipes'
                         ),
                         MessageTemplateAction(
@@ -285,7 +285,7 @@ def send_showrecipe_carousel(id, imgs, titles, titletexts, labels, texts):
             text="Navigate to ... ",
             actions=[
                 MessageTemplateAction(
-                    label='Search others',
+                    label='Search other Recipes',
                     text='search other recipes'
                 ),
                 MessageTemplateAction(
