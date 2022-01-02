@@ -1,14 +1,100 @@
 from linebot.models.events import PostbackEvent
+from transitions.core import Machine
 from transitions.extensions import GraphMachine
 from linebot.models import MessageTemplateAction
 
 from utils import find_ingredient, find_method, find_nutrition, find_urls, get_img_url, get_recipe_name, send_chef_carousel, send_cr_carousel, send_msg_carousel, send_showrecipe_carousel, send_text_message, send_button_message, send_recipe_carousel, send_uri_carousel
 
-class TocMachine(GraphMachine):
+class TocMachine(object):
     currenturl = ""
+    
+    fsmDefinition = {
+        "states":["user", "start", "searchrecipe", "searchchef",
+                "showbreakfast", "showlunch", "showdinner", "showchefrecipes",
+                "showmethod", "showingredient", "shownutrition",
+                "searchotherrecipe", "showother"],
+        "transitions":[
+            {
+                "trigger": "advance",
+                "source": "user",
+                "dest": "start",
+                "conditions": "is_going_to_start"
+            },
+            {
+                "trigger": "advance",
+                "source": ["start", "showbreakfast", "showlunch", "showdinner", "showchefrecipes", "showmethod", "showingredient", "shownutrition", "showother"],
+                "dest": "searchrecipe",
+                "conditions": "is_going_to_searchrecipe"
+            },
+            {
+                "trigger": "advance",
+                "source": ["start", "searchrecipe", "showother", "showbreakfast", "showlunch", "showdinner", "showchefrecipes"],
+                "dest": "searchotherrecipe",
+                "conditions": "is_going_to_searchotherrecipe"
+            },
+            {
+                "trigger": "advance",
+                "source": "start",
+                "dest": "searchchef",
+                "conditions": "is_going_to_searchchef"
+            },
+            {
+                "trigger": "advance",
+                "source": "searchrecipe",
+                "dest": "showbreakfast",
+                "conditions":"is_going_to_showbreakfast"
+            },
+            {
+                "trigger": "advance",
+                "source": "searchrecipe",
+                "dest": "showlunch",
+                "conditions":"is_going_to_showlunch"
+            },
+            {
+                "trigger": "advance",
+                "source": "searchrecipe",
+                "dest": "showdinner",
+                "conditions":"is_going_to_showdinner"
+            },
+            {
+                "trigger": "advance",
+                "source": ["searchchef", "searchrecipe"],
+                "dest": "showchefrecipes",
+                "conditions": "is_going_to_showchefrecipes"
+            },
+            {
+                "trigger": "advance",
+                "source": ["showbreakfast", "showlunch", "showdinner", "showchefrecipes", "showingredient", "shownutrition", "showother"],
+                "dest": "showmethod",
+                "conditions": "is_going_to_showmethod"
+            },
+            {
+                "trigger": "advance",
+                "source": ["showbreakfast", "showlunch", "showdinner", "showchefrecipes", "showmethod", "shownutrition", "showother"],
+                "dest": "showingredient",
+                "conditions": "is_going_to_showingredient"
+            },
+            {
+                "trigger": "advance",
+                "source": ["showbreakfast", "showlunch", "showdinner", "showchefrecipes", "showmethod", "showingredient", "showother"],
+                "dest": "shownutrition",
+                "conditions": "is_going_to_shownutrition"
+            },
+            {
+                "trigger": "advance",
+                "source": "searchotherrecipe",
+                "dest": "showother",
+                "conditions": "is_going_to_showother"
+            },
+            {"trigger": "go_back", "source": ["searchrecipe", "searchotherrecipe", "searchchef", "showother", 
+            "showbreakfast", "showlunch", "showdinner", "showchefrecipes"], "dest": "start"},
+        ],
+        "initial": "user"
+    }
 
     def __init__(self, **machine_configs):
-        self.machine = GraphMachine(model=self, **machine_configs)
+        #self.machine = GraphMachine(model=self, **machine_configs)
+        self.machine = GraphMachine(model=self, **TocMachine.fsmDefinition)
 
     def is_going_to_start(self, event):
         # This means whoever has the bot can enter anything to start it

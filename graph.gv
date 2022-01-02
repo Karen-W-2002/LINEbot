@@ -1,0 +1,87 @@
+digraph "State Machine" {
+	graph [color=black directed=true fillcolor=white label="State Machine" rankdir=LR "strict"=false style=solid]
+	node [color=black fillcolor=white peripheries=1 shape="circle" style="rounded, filled"]
+	edge [color=black]
+
+	user [label="user" color=red fillcolor=darksalmon peripheries=2]
+	start [label="start"]
+	searchrecipe [label="searchrecipe"]
+	searchchef [label="searchchef"]
+
+	showbreakfast [label="showbreakfast"]
+	showlunch [label="showlunch"]
+	showdinner [label="showdinner"]
+	showchefrecipes [label="showchefrecipes"]
+
+	showmethod [label="showmethod"]
+	showingredient [label="showingredient"]
+	shownutrition [label="shownutrition"]
+
+	searchotherrecipe [label="searchotherrecipe"]
+	showother [label="showother"]
+	
+
+
+	user->start[label="advance [is_going_to_start]"]
+
+	start->searchrecipe[label="advance [is_going_to_searchrecipe]"]
+	showbreakfast->searchrecipe[label="advance [is_going_to_searchrecipe]"]
+	showlunch->searchrecipe[label="advance [is_going_to_searchrecipe]"]
+	showdinner->searchrecipe[label="advance [is_going_to_searchrecipe]"]
+	showchefrecipes->searchrecipe[label="advance [is_going_to_searchrecipe]"]
+	showmethod->searchrecipe[label="advance [is_going_to_searchrecipe]"]
+	showingredient->searchrecipe[label="advance [is_going_to_searchrecipe]"]
+	shownutrition->searchrecipe[label="advance [is_going_to_searchrecipe]"]
+	showother->searchrecipe[label="advance [is_going_to_searchrecipe]"]
+
+	start->searchotherrecipe[label="advance [is_going_to_searchotherrecipe]"]
+	searchrecipe->searchotherrecipe[label="advance [is_going_to_searchotherrecipe]"]
+	showother->searchotherrecipe[label="advance [is_going_to_searchotherrecipe]"]
+	showbreakfast->searchotherrecipe[label="advance [is_going_to_searchotherrecipe]"]
+	showlunch->searchotherrecipe[label="advance [is_going_to_searchotherrecipe]"]
+	showdinner->searchotherrecipe[label="advance [is_going_to_searchotherrecipe]"]
+	showchefrecipes->searchotherrecipe[label="advance [is_going_to_searchotherrecipe]"]
+
+	start->searchchef[label="advance [is_going_to_searchchef]"]
+
+	searchrecipe->showbreakfast[label="advance [is_going_to_showbreakfast]"]
+	searchrecipe->showlunch[label="advance [is_going_to_showlunch]"]
+	searchrecipe->showdinner[label="advance [is_going_to_showdinner]"]
+	searchrecipe->showchefrecipes[label="advance [is_going_to_showchefrecipes]"]
+	searchchef->showchefrecipes[label="advance [is_going_to_showchefrecipes]"]
+
+	showbreakfast->showmethod[label="advance [is_going_to_showmethod]"]
+	showlunch->showmethod[label="advance [is_going_to_showmethod]"]
+	showdinner->showmethod[label="advance [is_going_to_showmethod]"]
+	showchefrecipes->showmethod[label="advance [is_going_to_showmethod]"]
+	showingredient->showmethod[label="advance [is_going_to_showmethod]"]
+	shownutrition->showmethod[label="advance [is_going_to_showmethod]"]
+	showother->showmethod[label="advance [is_going_to_showmethod]"]
+
+	showbreakfast->showingredient[label="advance [is_going_to_showingredient]"]
+	showlunch->showingredient[label="advance [is_going_to_showingredient]"]
+	showdinner->showingredient[label="advance [is_going_to_showingredient]"]
+	showchefrecipes->showingredient[label="advance [is_going_to_showingredient]"]
+	showmethod->showingredient[label="advance [is_going_to_showingredient]"]
+	shownutrition->showingredient[label="advance [is_going_to_showingredient]"]
+	showother->showingredient[label="advance [is_going_to_showingredient]"]
+
+	showbreakfast->shownutrition[label="advance [is_going_to_shownutrition]"]
+	showlunch->shownutrition[label="advance [is_going_to_shownutrition]"]
+	showdinner->shownutrition[label="advance [is_going_to_shownutrition]"]
+	showchefrecipes->shownutrition[label="advance [is_going_to_shownutrition]"]
+	showmethod->shownutrition[label="advance [is_going_to_shownutrition]"]
+	showingredient->shownutrition[label="advance [is_going_to_shownutrition]"]
+	showother->shownutrition[label="advance [is_going_to_shownutrition]"]
+
+	searchotherrecipe->showother[label="advance [is_going_to_showother]"]
+
+	searchrecipe->start[label="go_back"]
+	searchotherrecipe->start[label="go_back"]
+	searchchef->start[label="go_back"]
+	showother->start[label="go_back"]
+	showbreakfast->start[label="go_back"]
+	showlunch->start[label="go_back"]
+	showdinner->start[label="go_back"]
+	showchefrecipes->start[label="go_back"]
+}
