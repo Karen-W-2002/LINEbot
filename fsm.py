@@ -20,7 +20,7 @@ class TocMachine(object):
                 "dest": "start",
                 "conditions": "is_going_to_start"
             },
-            {
+        {
                 "trigger": "advance",
                 "source": ["start", "showbreakfast", "showlunch", "showdinner", "showchefrecipes", "showmethod", "showingredient", "shownutrition", "showother"],
                 "dest": "searchrecipe",
@@ -34,7 +34,7 @@ class TocMachine(object):
             },
             {
                 "trigger": "advance",
-                "source": "start",
+                "source": ["start", "showchefrecipes"],
                 "dest": "searchchef",
                 "conditions": "is_going_to_searchchef"
             },
@@ -93,8 +93,7 @@ class TocMachine(object):
     }
 
     def __init__(self, **machine_configs):
-        #self.machine = GraphMachine(model=self, **machine_configs)
-        self.machine = GraphMachine(model=self, **TocMachine.fsmDefinition)
+        self.machine = Machine(model=self, **TocMachine.fsmDefinition)
 
     def is_going_to_start(self, event):
         # This means whoever has the bot can enter anything to start it

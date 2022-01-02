@@ -3,7 +3,6 @@ import sys
 
 from flask import Flask, jsonify, request, abort, send_file
 from dotenv import load_dotenv
-from flask.helpers import send_from_directory
 from linebot import LineBotApi, WebhookParser
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
@@ -44,8 +43,7 @@ def callback():
         events = parser.parse(body, signature)
     except InvalidSignatureError:
         abort(400)
-    #machine.get_graph().draw("fsm.png", prog="dot", format="png")
-    #return send_file("fsm.png", mimetype="image/png")
+
     # if event is MessageEvent and message is TextMessage, then echo text
     for event in events:
         if isinstance(event, PostbackEvent):
@@ -66,7 +64,7 @@ def webhook_handler():
     signature = request.headers["X-Line-Signature"]
     # get request body as text
     body = request.get_data(as_text=True)
-    app.logger.info(f"Request body: {body}")
+    app.logger.info("Request body: " + body)
 
     # parse webhook body
     try:
@@ -76,29 +74,18 @@ def webhook_handler():
 
     # if event is MessageEvent and message is TextMessage, then echo text
     for event in events:
-        if not isinstance(event, MessageEvent):
-            continue
-        if not isinstance(event.message, TextMessage):
-            continue
-        if not isinstance(event.message.text, str):
-            continue
-        print(f"\nFSM STATE: {machine.state}")
-        print(f"REQUEST BODY: \n{body}")
-        response = machine.advance(event)
-        if response == False:
-            send_text_message(event.reply_token, "Not Entering any State")
+        if isinstance(event, PostbackEvent):
+            response = machine.advance(event)
+        else:
+            response = machine.advance(event)
+
+            if response == False:                  
+                if event.message.text.lower() == 'home':
+                    machine.go_back(event)
+                else:
+                    send_text_message(event.reply_token, "Error, invalid command try again!")
 
     return "OK"
-
-@app.route('/graphs/<path:path>')
-def graph(path):
-    return send_from_directory('graphs',path)
-
-@app.route("/show-fsm", methods=["GET"])
-def show_fsm():
-    machine.get_graph().draw("fsm.png", prog="dot", format="png")
-    return send_file("fsm.png", mimetype="image/png")
-
 
 if __name__ == "__main__":
     port = os.environ.get("PORT", 8000)
