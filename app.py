@@ -3,6 +3,7 @@ import sys
 
 from flask import Flask, jsonify, request, abort, send_file
 from dotenv import load_dotenv
+from flask.helpers import send_from_directory
 from linebot import LineBotApi, WebhookParser
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
@@ -14,92 +15,7 @@ from utils import send_text_message
 
 load_dotenv()
 
-
-machine = TocMachine(
-    states=["user", "start", "searchrecipe", "searchchef",
-            "showbreakfast", "showlunch", "showdinner", "showchefrecipes",
-            "showmethod", "showingredient", "shownutrition",
-            "searchotherrecipe", "showother"],
-    transitions=[
-        {
-            "trigger": "advance",
-            "source": "user",
-            "dest": "start",
-            "conditions": "is_going_to_start"
-        },
-       {
-            "trigger": "advance",
-            "source": ["start", "showbreakfast", "showlunch", "showdinner", "showchefrecipes", "showmethod", "showingredient", "shownutrition", "showother"],
-            "dest": "searchrecipe",
-            "conditions": "is_going_to_searchrecipe"
-        },
-        {
-            "trigger": "advance",
-            "source": ["start", "searchrecipe", "showother", "showbreakfast", "showlunch", "showdinner", "showchefrecipes"],
-            "dest": "searchotherrecipe",
-            "conditions": "is_going_to_searchotherrecipe"
-        },
-        {
-            "trigger": "advance",
-            "source": ["start", "showchefrecipes"],
-            "dest": "searchchef",
-            "conditions": "is_going_to_searchchef"
-        },
-        {
-            "trigger": "advance",
-            "source": "searchrecipe",
-            "dest": "showbreakfast",
-            "conditions":"is_going_to_showbreakfast"
-        },
-        {
-            "trigger": "advance",
-            "source": "searchrecipe",
-            "dest": "showlunch",
-            "conditions":"is_going_to_showlunch"
-        },
-        {
-            "trigger": "advance",
-            "source": "searchrecipe",
-            "dest": "showdinner",
-            "conditions":"is_going_to_showdinner"
-        },
-        {
-            "trigger": "advance",
-            "source": ["searchchef", "searchrecipe"],
-            "dest": "showchefrecipes",
-            "conditions": "is_going_to_showchefrecipes"
-        },
-        {
-            "trigger": "advance",
-            "source": ["showbreakfast", "showlunch", "showdinner", "showchefrecipes", "showingredient", "shownutrition", "showother"],
-            "dest": "showmethod",
-            "conditions": "is_going_to_showmethod"
-        },
-        {
-            "trigger": "advance",
-            "source": ["showbreakfast", "showlunch", "showdinner", "showchefrecipes", "showmethod", "shownutrition", "showother"],
-            "dest": "showingredient",
-            "conditions": "is_going_to_showingredient"
-        },
-        {
-            "trigger": "advance",
-            "source": ["showbreakfast", "showlunch", "showdinner", "showchefrecipes", "showmethod", "showingredient", "showother"],
-            "dest": "shownutrition",
-            "conditions": "is_going_to_shownutrition"
-        },
-        {
-            "trigger": "advance",
-            "source": "searchotherrecipe",
-            "dest": "showother",
-            "conditions": "is_going_to_showother"
-        },
-        {"trigger": "go_back", "source": ["searchrecipe", "searchotherrecipe", "searchchef", "showother", 
-        "showbreakfast", "showlunch", "showdinner", "showchefrecipes"], "dest": "start"},
-    ],
-    initial="user",
-    auto_transitions=False,
-    show_conditions=True,
-)
+machine = TocMachine()
 
 app = Flask(__name__, static_url_path="")
 
@@ -128,7 +44,8 @@ def callback():
         events = parser.parse(body, signature)
     except InvalidSignatureError:
         abort(400)
-
+    #machine.get_graph().draw("fsm.png", prog="dot", format="png")
+    #return send_file("fsm.png", mimetype="image/png")
     # if event is MessageEvent and message is TextMessage, then echo text
     for event in events:
         if isinstance(event, PostbackEvent):
@@ -173,6 +90,9 @@ def webhook_handler():
 
     return "OK"
 
+@app.route('/graphs/<path:path>')
+def graph(path):
+    return send_from_directory('graphs',path)
 
 @app.route("/show-fsm", methods=["GET"])
 def show_fsm():
